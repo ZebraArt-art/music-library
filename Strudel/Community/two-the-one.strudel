@@ -1,0 +1,75 @@
+// @title Two the one
+// @by Rymdljus (mal edit)
+setcpm(120/4)
+samples('github:malmode/SwitchAngel_Num')
+samples('github:2lofi/samps4strudel')
+const bd = s("sbd").n(0).struct(`<
+x -
+x [- x]
+x -
+x [x x]
+>*8`)
+  .mask("<1!14 0 [0 0 0 1]>")
+
+const hh = s("white!16")
+  .dec(rand.range(.01, .03))
+  .pan(rand.range(.2,.8))
+  .mask("<1!14 0 [0 0 0 0]>").superimpose(x=>x.gain(.3))
+
+
+
+
+const congas = s("conga")
+  .n(`<
+    8 8 1 1
+    2 1 8 8
+    1 2 1 8
+    2 1 2 2
+  >`)
+  .fast(16)
+  .struct(`<
+  x!4
+  x!4
+  [x x?] [x -] x!2
+  x!4
+  >*16`)
+  .hpf(450).diode("2.5:.7")
+  .mask("<1!14 0 [0 0 0 1]>")
+
+const numbers = s("count")
+  .n(arrange(
+    [12, "<1 1 1 [1 2]>"], 
+    [4, "<1 2 3 4>*2"]))
+  .slice("8", irand(8).seg(16)).superimpose(x=>x.dist("2:.5:asym").hpf("200:10"))
+const sub = irand(3).seg(16)
+  .degradeBy(.4).rib(18,2)
+  .add("<0 -2 3 0>".slow(2)).sub(12).n().scale("g1:minor")
+  .seg(16).s("sb:2").gain(.4).cut(3).clip(1).mask("<1!14 0!2>")
+
+
+const bass = stack (irand(3).seg(16)
+  .degradeBy(.4).rib(18,2)
+  .add("<0 -2 3 0>".slow(2)).sub(12).n().scale("g4:minor")
+  .seg(16)
+  .s("supersaw").partials(binaryL(irand(256).add("5")))
+  .dec(.7).cut(1).penv("2").patt(".2")
+  .superimpose(x=>x.fm(1.35).fmwave("bytebeat"
+  .bbexpr('(t/.2575*2**([-5,,,7,-5,,8,,-4,,7,,-5,,7][t>>10&15]/12-2)&127)+(t/.2575*2**([7,5,3,0,-4,,,,,,,,,,10,,0,3,5,7,8,,,,,,,,,,7,,5,7,-5,-4,0,,,,,,,,,,5,,7,8,-4,-7,-5][t>>10&63]/12)&127)')).dist("3:.2:diode").fmh("5"))
+  .lpf(choose("1000:15","800:17","1500:12","720:18","2100:10")).lpenv(2).lpd(.15).hpf(300),
+  irand(3).seg(16)
+  .degradeBy(.4).rib(18,2)
+  .add("<0 -2 3 0>".slow(2)).sub(12).note().scale("g:minor")
+  .seg(16)
+  .s(choose("gm_slap_bass_2:0","gm_slap_bass_2:1","gm_slap_bass_2:2","gm_slap_bass_2:3")).lpf("80:20").gain(1))                
+  .mask("<1!14 0!2>").postgain(.6)
+
+const arp1 = n("[0 3 0 7]/2 [5 8 5 12]/2 [7 11 7 14]/2 [8 12 8 15]/2".add("<0 -2 3 [0 -12]>".slow(2))).scale("g3:minor").s("pl_c:<60 22 29 15>*8").gain(.19).o(3)
+.superimpose(x=>x.att(.15).delay(".4").delaysync(2)).room(2).mask("<1!14 0 1>").diode("<a!15 b>".pick({a: "1:.4", b: "3:.1"}))
+
+const song = arrange(
+  [4, stack(numbers)],
+  [16, stack(numbers, hh, arp1.hpf(400).lpf(900))],
+  [16, stack(numbers.mask("<1!15 0>"), bd, hh, arp1.hpf(300), sub)],
+  [32, stack(numbers.mask("<1!31 0>"), bd, hh, congas, bass, arp1.hpf(300), sub)]
+)
+$: song
