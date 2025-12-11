@@ -1,0 +1,195 @@
+//@title DUTTY BASS  @by 2LoFi
+setCpm(174/4)
+samples('github:2lofi/samps4strudel')
+
+const gn = ["<1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 [1 0] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 [1 0] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0>",  //0
+            "<0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 [1 0] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0>",      //1
+            "<1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 [1 0]>",                                                                                                        //2
+            "<1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 [1 0] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0>",                                                                      //3
+            "<0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0>",                                                                      //4
+            "<0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 [1 0] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0>",     //5
+            "<1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0>",            //6
+            "<1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0>",             //7
+            "<1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0>",           //8 drop pattern{dp}-1
+            "<0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0>",            //9 dp-2
+            "<0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0>",           //10 dp-3
+            "<0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1>",           //11 dp-4
+            "<1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0>",           //12
+            "<0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0>",            //13
+            "<1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0>",         //14
+            "<0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 [1 0]>",       //15
+            "<1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0>",         //16
+            "<0 0 0 0 1 1 1 1>",              //17
+            "<1 1 1 [1 1 1 0]*4>"]          //18
+            
+
+const d1 = ["0,10,18,26",  //0
+            "0,6,10,16,22,26,31", //1
+            "0,10,16,26",   //2
+            "4,12,20,28",   //3
+            "0,2.1,4,6.1",   //4
+            "1.3,3,5.3,7",   //5
+            "0,4,8,12,16", //6  straight
+            "4,12",      //7 snare
+            "3,6,11,14,19,23"]
+
+
+const build1 = cat(
+  "0 ~ [~0] ~ ",
+  "0 ~ [~0] ~ ",
+  "0 ~ [~0] ~ ",
+  "0 ~ [~0] ~ ",
+  "0*2 ~ [~0] ~ ",
+  "0 ~ [~0] ~ ",
+  "0*2 ~ 0*3 [~ 0] ",
+  "0 ~ [~0] [~ 0] ",
+  "0 [0 0] 0 0",
+  "0 [0 0] 0 0",
+  "[0 0 0] 0*2 0 [0 0]",
+  "0 [0 0] 0 [0 0 0]",
+  "[0 0] [0 0] [0 0] [0 0]",
+  "[0 0] [0 0] [0 0] [0 0 0]",
+  "[0 0]*2 [0 0]*2 [0 0]*2 [0 0]*2",
+  "~ ~ ~ ~"
+
+)
+const drums_drop = stack(
+ s("kd:5").beat(d1[0],32).slow(2).gain(gn[16]).postgain(".7").duckorbit(2,4,6),
+ s("sn:6").beat(d1[7],16).slow(1).gain(gn[16]).postgain(".7"),
+ s("korgm1_hh:<0 1>*4").beat(d1[5],8).gain(gn[15]).postgain(".2").hpf("300"),
+ s("rm50_oh:3").beat(d1[4],8).gain(gn[15]).postgain(.3).hpf("300"))
+
+const drums_drop2 = stack(
+ s("kd:5").beat(d1[6],16).slow(1).gain(gn[16]).postgain(".7").duckorbit(2,4,6),
+ s("sn:6").beat(d1[7],16).slow(1).gain(gn[16]).postgain(".7"),
+ s("korgm1_hh:<0 1>*4").beat(d1[5],8).gain(gn[15]).postgain(".2").hpf("300"),
+ s("rm50_oh:3").beat(d1[4],8).gain(gn[15]).postgain(.3).hpf("300"))
+
+const drums_build = stack(
+  build1.s("kd:5").gain(.6).duckorbit(4,6),
+  s("sn:6").beat(d1[3],32).slow(2).gain(gn[16]).postgain(".6"),
+  s("korgddm110_hh").beat(d1[5],8).gain(gn[16]).postgain(".2").hpf("300"),
+  s("sequentialcircuitsdrumtracks_oh").beat(d1[4],8).gain(gn[16]).postgain(.2).hpf("300")
+)
+
+const leada = cat(
+  "0 _ _ < [0 0] [0 0 0]> ",
+  "3 _ -2 _"
+ ).n().scale("g2:minor").s("wt_analogs2:41,supersaw ".det("-.2")).gain(gn[2])
+  .fm(5.27).fmwave("bytebeat".bbexpr('127*sin(t/112.5*[0,1,0,1,4,5,4,5,0,1,0,1,4,5,4,5,16,17,16,17,20,21,20,21,16,17,16,17,20,21,20,21][t/11025&31])+100*sin(t/5E3)').det(".2")).slow(2)
+  .wt(.741).warp("4").warpmode("wormhole").o(3).att(".05").delay(".4").delaysync("2")
+  .penv("2").patt(".2").swing(12).distort("5:1:asym").postgain(.65).trans("<0 0 0 0 -5 -5 -5 [-2 3]>")
+  .tremsync("<6 8 4 [12 7]>")
+const impact = stack(n("[-24]/8").scale("f2:minor").s("kd:16").att(".2")
+  .superimpose(x=>x.transpose("-48").lpf("100:15").ftype("24db").dist("5:1:asym")).o(13).room(4).postgain(.3),
+                     n("0 _ _ _").s("kd:21").gain(1).slow(8))
+const leadb = cat(
+  "0 _ _ < [0 0] [0 0 0]> ",
+  "3 _ -2 _"
+ ).n().scale("g2:minor").s("wt_analogs2:41,supersaw ".det("-.2")).gain(gn[16])
+  .fm(5.27).fmwave("bytebeat").bbexpr('(t^t>>8)*(t>>16&t)').slow(2)
+  .wt(.264).warp("4").warpmode("wormhole").o(4).att(".05").delay(".4").delaysync("2")
+  .penv("2").patt(".2").swing(12).distort("5:1:asym").postgain(.65)
+  .trans("<0 0 0 0 -5 -5 -5 [-2 3] 5 5 5 5 7 7 7 [7 3]>")
+  .tremsync("<6 8 4 [12 7] 6 8 4 [12 7] 6 8 4 [12 7] 8 12 16 20>")
+const pluck1 = cat(
+  "[0 0] [-4]*3 [0]*3 [~ 0]".add("<0 0 12 12>"),
+  "[-5]*4 [-5]*2 [-2]*3 [~ -5]".add("<0 0 12 12>")
+).n().scale("g2:minor").s("pl_c:<5 21>*4").gain(gn[2]).postgain(.35).o(6).crush("12").superimpose(x => x.chorus(1).room(2)).slow(2).hpf("300")
+
+const riser1 = n("[0 _ _ _]/16").scale("g4:minor").s("tri").att(32)
+  .penv("24").patt("32").hpf(saw.slow(32).range(100,5000)).gain(.5).o(11).chorus(1).room(3).tremsync(8).tremdepth(10).clip(1)
+const riser2 = n("[0 _ _ _]/16").scale("g4:minor").s("sine").att(32).fm(5).fmwave("white")
+  .penv("24").patt("32").hpf(saw.slow(32).range(100,5000)).gain(.3).o(12).chorus(1).room(3).tremdepth(10).tremsync(8).clip(1)
+const int_reese = n("[0]/4").scale("g0:minor").s("rcb_c:6").gain(.5).clip(1).cut(7)//.slow(4)
+const int_reesep = n("0 _ _ _").scale("g0:minor").penv("<0 0 0 12>").patt("<0 0 0 4>").trans("<0 0 0 12>").s("rcb_c:6")
+  .gain(gn[18]).postgain(.5).clip(1).cut(7).slow(4)
+
+const int_pluck = n("<[0 3 7] [-2 2 5]> <[0 3 10] [-2 5 7]> [0 2 <5 4>] <[-2 -5 2] [-7 -4 -3]> ")
+                         .scale("g3:minor").s("pl_c:<3 33 [3 4] 27>*4").gain(gn[2]).postgain(.6).clip(1)
+                         .slow(2).o(5).room(1).ph("8").phasdp("1").phasercenter("600").phasersweep(sine.slow(2).range(100,3000)).superimpose(x => x.chorus(1)).hpf("300")
+const int_k = s("kd:5").beat(d1[0],32).slow(2).gain(gn[2]).postgain(".6").duckorbit(2,3)
+const int_s = s("sn:6").beat(d1[7],16).slow(1).gain(gn[2]).postgain(".6")
+const int_hh = s("rm50_oh:3").beat(d1[5],8).gain(gn[15]).postgain(.5).hpf("300")
+const end_reese = n(" 0 5 0 _").scale("g0:minor").s("rcb_c:6").gain(.5).clip(1).cut(7).slow(8).o(10)
+const drums_bd = stack(
+ s("kd:5").beat(d1[0],4*8).slow(2).gain(gn[3]).postgain(".5"),
+ s("sn:6").beat(d1[3],32).slow(2).gain(gn[3]).postgain(".5"),
+ s("korgddm110_hh").beat(d1[5],8).gain(gn[4]).postgain(".5").hpf("300"),
+ s("sequentialcircuitsdrumtracks_oh").beat(d1[4],8).gain(gn[4]).postgain(.3).hpf("300"))
+
+const bd_1 = stack(
+   n("0 ~ [3 5*2] [~ <5 7>]".slow(2)).scale("g2:minor").gain(gn[12])
+   .s("duttyv1:<12 15 15 12>*4").postgain(.7).cut(4).o(2).clip(1),
+   n("[~ <5 5 5 4 4 4>*3] ~ [-2 3*2] [~ 0]".slow(2)).scale("g2:minor")
+   .s("duttyv1:<8 12 12 16>*4").gain(gn[9]).postgain(.7).cut(5).o(2).clip(1),
+   n("-2 ~ [8 6 3] [1 -2 0]".slow(2)).scale("g2:minor")
+   .s("duttyv1:<8 21 21 14>*4").gain(gn[11]).postgain(.7).cut(6).o(2).clip(1),
+   n("[~ 0 _ _] [~ 0 _ _] [~ 0 _ _] [~ 0 _ _]".add("<0 0 0 0>/2")).scale("g-1:minor")
+   .s("sb:0").gain(gn[0]).cut(2).clip(1).postgain(.4).lpf("100").lpq(7).o(2).clip(1))
+
+const bd_2 = stack(
+   n("0 ~ [0 7] 8".slow(2)).scale("g2:minor")
+    .s("duttyv1:<12 15 15 12>*4").gain(gn[12]).postgain(.7).cut(4).o(2).clip(1),
+   n("[<-2 -5>~ <<4 5>*3 <2 3>*3>] <3 0> <-3 -5> [~ <0 ~>]".slow(2)).scale("g2:minor")
+    .s("duttyv1:<8 12 12 <16 36>>*4").gain(gn[11]).postgain(.7).cut(5).o(2).clip(1),
+   n("-5 ~ [<7 5> <10*2 8*2>] <5 3> ".slow(2)).scale("g2:minor")
+    .s("duttyv1:<8 21 21 14>*4").gain(gn[9]).postgain(.7).cut(6).o(2).clip(1),
+   n("[~ 0 _ _] [~ 0 _ _] [~ 0 _ _] [~ 0 _ _]".add("<0 0 0 0>/2")).scale("g-1:minor")
+    .s("sb:0").gain(gn[0]).cut(2).clip(1).postgain(.4).lpf("100").lpq(7).o(2).clip(1))
+
+const bd_3 = stack(
+   n("[~ 0] [~ 0] [~ 0] [~ 0]".slow(2)).scale("g2:minor")
+    .s("duttyv1:<12 15 12 12>*4").gain(gn[12]).postgain(.7).cut(4).o(2).clip(1),
+   n("[~ 0] [~ 0] [~ 0] [~ 0]".slow(2)).scale("g2:minor")
+    .s("duttyv1:<8 26 14 <16 36>>*4").gain(gn[11]).postgain(.7).cut(5).o(2).clip(1),
+   n("[~ 0] [~ 0] [~ 0] [~ 0] ".slow(2)).scale("g2:minor")
+    .s("duttyv1:<8 21 21 14>*4").gain(gn[9]).postgain(.7).cut(6).o(2).clip(1),
+   n("[~ 0 _ _] [~ 0 _ _] [~ 0 _ _] [~ 0 _ _]".add("<0 0 0 0>/2")).scale("g-1:minor")
+    .s("sb:0").gain(gn[0]).cut(2).clip(1).postgain(.4).lpf("100").lpq(7).o(2).clip(1))
+
+const bd_4 = stack(
+   n("[~ 0] [5 0] [7 0] [12 8]".slow(2)).scale("g2:minor")
+    .s("duttyv1:<12 15 12 12>*4").gain(gn[12]).postgain(.7).cut(4).o(2).clip(1),
+   n("[~ -2*2] [5 0]*2 [~ -5] [0 <-2 -2 -2 ~>]".slow(2)).scale("g2:minor")
+    .s("duttyv1:<48 56 31 <16 36>>*4").gain(gn[11]).postgain(.7).cut(5).o(2).clip(1),
+   n("[~ -2*3] [~ 5] <[7 ~]*3[~ 3]*3> <[~ 1] [~ -2]> ".slow(2)).scale("g2:minor")
+    .s("duttyv1:<8 21 21 14>*4").gain(gn[9]).postgain(.7).cut(6).o(2).clip(1),
+   n("[~ 0 _ _] [~ 0 _ _] [~ 0 _ _] [~ 0 _ _]".add("<0 0 0 0>/2")).scale("g-1:minor")
+    .s("sb:0").gain(gn[0]).cut(2).clip(1).postgain(.4).lpf("100").lpq(7).o(2).clip(1))
+
+const intro = arrange(
+  [8, stack(int_reese, int_pluck.lpf(saw.slow(8).range(200,3000)))],
+  [8, stack(int_reese.trans("5"), int_pluck, int_k, int_s)],
+  [16, stack(int_reesep, int_pluck.fast("<1 1 1 1 1 1 [1.5 2] [ 3 4 ]>/2").gain(gn[16]).postgain(.6), drums_build, 
+             riser1, riser2)]
+)
+
+const breakd = arrange(
+  [8, stack(int_reese, impact, int_pluck.lpf(saw.slow(8).range(200,3000)), pluck1.lpf(saw.slow(8).range(200,3000)))],
+  [8, stack(int_reese, int_pluck, int_k, int_s,leada, pluck1)],
+  [16, stack(int_reesep, int_pluck.fast("<1 1 1 1 1 1 [1.5 2] [ 3 4 ]>/2").gain(gn[16]).postgain(.6), 
+             drums_build, leadb, pluck1, riser1, riser2)]
+
+)
+
+const drop1 = arrange(
+   [16, stack(bd_1, drums_drop)],
+   [16, stack(bd_2, drums_drop)]
+)
+
+const drop2 = arrange(
+   [16, stack(bd_3, drums_drop2)],
+   [16, stack(bd_4, drums_drop)]
+)
+
+const track = arrange(
+   [32, intro],
+   [32, drop1],
+  [32, breakd],
+  [32, drop2],
+  [8, stack(int_reese, int_k, int_s, pluck1)],
+  [8, stack(end_reese.lp(20).lpe("-4").lpa(8),int_s, int_k.hpf(saw.slow(8).range(20,6000)), pluck1.hpf(saw.slow(8).range(20,6000)))]
+)
+
+$:track
