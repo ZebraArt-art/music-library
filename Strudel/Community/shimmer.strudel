@@ -1,0 +1,120 @@
+// @title Shimmer @by Cri
+
+function _drums(source){
+  return source.inhabit({
+    bd: "bd".bank("tr808"), 
+    rim: "rim".bank("tr626").gain(0.4)
+  }).s().distort(0.6).orbit(0)
+}
+
+function isEPiano(note){
+  return Array.isArray(note.value) && note.value[1] === 'e'
+}
+
+register('key', (oct, source) => source.n().scale("fb:minor").trans((oct ?? 0) * 12 + -2))
+register(
+  'epiano', 
+  (oct, source) => 
+    source.key(oct).s("gm_epiano1:1").room(0.25).sus(0.4).release(2).gain(0.5).lpf(800).orbit(1)
+)
+register(
+  'piano', 
+  (oct, source) => source.key(oct).s("piano").room(1).decay(0.1).sus(0.4).release(2).gain(0.5).orbit(2)
+)
+register('drums', _drums)
+
+setcpm(105/4)
+
+const hh = "hh*4".s().bank("tr808")
+
+const shimmer = stepcat(
+  "1@2",
+  "0@2"
+).pace(1)
+  .key(3)
+  .s("gm_epiano1:3").sus(1)
+  .phaser("4")
+  .room(8).hpf(1600).delay(0.5)
+  .orbit(1).postgain(0.01)
+
+// -------------------------- Intro --------------------------
+
+const epiano_intro = cat(
+  "~",
+  "~",
+  "~",
+  "~",
+  
+  "[1, 8]", 
+  "~ ~ ~ [1, 8]", 
+  "[0, 7]", 
+  "~ ~ ~ [0, 7]",
+  
+  "[1, 8] ~ 8 ~",
+  "~ ~ ~ [1, 8]",
+  "[0, 7] ~ 7 ~",
+  "~",
+).piano(2).delay(0.1)
+
+
+const intro = stack(shimmer, epiano_intro)
+
+// -------------------------- Verse --------------------------
+
+const drums_verse = 
+  cat(
+    "bd ~ rim [~ rim]",
+    "[~ rim] rim rim ~"
+  ).drums().delay(0.05)
+
+const bass = cat(
+  "~",
+)
+
+const piano = cat(
+  "~",
+  "~",
+  "~",
+  "~",
+  
+  "[1, 3, 8] ~ [8 7] [~ 8]",
+  "[~ 8] [1, 3, 8] ~ [1, 3, 8]", 
+  "[0, 2, 7] ~ [6 7] [~ 8]", 
+  "[~ 6] 7 ~ ~",
+  
+  "[1, 3, 6] ~ 6 [6 8]",
+  "[~ 6] 8 ~ 6", 
+  "[1, 3, 5] ~ 5 [~ 8]",
+  "[~ 5] 7 ~ ~",
+  
+  "[1, 4, 6] ~ [8 6] [~ 7]",
+  "[~ 6] [8 6] [~ 8] [6 ~]", 
+  "[0, 3, 5] ~ 6 [8 6]", 
+  "[~ 8] [6 ~] [6 ~] ~",
+
+  "[1, 4, 6] ~ [8 6] [~ 6]",
+  "[~ 5] 6 6 [6 5]", 
+  "[0, 3, 5] ~ 6 [8 6]", 
+  "[~ 8] [6 ~] [6 ~] 7",
+
+  "[1, 3, 8] ~ ~ ~",
+  "~ ~ ~ [1, 3, 8]",
+  "[0, 2, 7]",
+  "~ ~ ~ [0, 2, 7]",
+
+  "[1, 3, 8] ~ ~ ~",
+  "~ ~ ~ [1, 3, 8]",
+  "[0, 2, 7]",
+  "~ ~ ~ [0, 2, 7]",
+).piano(1).delay(0.1)
+
+const verse = stack(
+  shimmer, drums_verse, piano
+)
+
+arrange(
+  [12, intro],
+  [4*7, verse],
+  [2, shimmer],
+  [4, silence]
+)
